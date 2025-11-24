@@ -1,3 +1,4 @@
+using System.Collections;
 using UI;
 using UnityEngine;
 
@@ -5,8 +6,8 @@ namespace Core
 {
     public class GameController : MonoBehaviour
     {
-
-        GameController instance;
+        [System.NonSerialized]
+        public static GameController instance;
 
         void Awake()
         {
@@ -37,10 +38,17 @@ namespace Core
         public void AddMove()
         {
             uiController.UpdateMoves(--currentMoves);
-            if(currentMoves <= 0)
+            if (currentMoves <= 0)
             {
-                uiController.ShowGameOver();
+
+                StartCoroutine(WaitforGameOver());
             }
+        }
+        
+        IEnumerator WaitforGameOver()
+        {
+            yield return new WaitForSeconds(1f);
+            uiController.ShowGameOver();
         }
 
         public void AddScore(int points)
